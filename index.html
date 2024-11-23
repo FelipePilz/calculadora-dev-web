@@ -16,6 +16,13 @@
     #calculator-body {
         border-radius: 10px !important;
     }
+
+    .calculator-input {
+        font-size: 2rem;
+        height: 60px;
+        text-align: right;
+        direction: ltr;
+    }
 </style>
 <body>
 
@@ -23,7 +30,6 @@
 
 <div class="d-flex justify-content-center align-items-center min-vh-100">
     <div id="calculator-body" class="border p-5">
-        <!-- Text input -->
         <div>
             <div class="input-group">
                 <input id="calculator-input" type="text" class="form-control shadow-none calculator-input" readonly value="0" aria-describedby="result">
@@ -32,7 +38,6 @@
         </div>
         <hr>
 
-        <!-- Inputs -->
         <div class="container text-center">
             <div class="row row-cols-4">
                 <button type="button" class="col p-3 btn btn-light border calculator-btn"
@@ -97,21 +102,22 @@
                     handleOperation(value);
                     resultGiven = false;
                 } else {
-                    //Caso ele tenha o resultado, e clique em algum numero, ele vai limpar o resultado e começar a digitar a nova operacao
                     clearCalculatorInput();
                     onClickEvent(value);
                 }
             } else if (sentences[index] === "0") {
-                //Caso o numero esteja em 0, e digitar uma virgula, virar "0."
                 if (isComma(value)) {
                     sentences[index] += value;
                 } else if (isNumber(value)) {
                     sentences[index] = value;
-                } else if (isResult(value) && index >= 2) {
+                } else if (isResult(value) && sentences.length >= 3) {
                     handleResult(value);
                 }
             } else {
                 if (isOperation(value)) {
+                    if (sentences[index].endsWith(".")) {
+                        sentences[index] += "0";
+                    }
                     handleOperation(value);
                 } else if (isResult(value)) {
                     handleResult();
@@ -141,7 +147,6 @@
         }
 
         function isNumber(value) {
-            //Isso daqui é um pecado capital, mas ignore por favor
             return value === "1" || value === "2" || value === "3" || value === "4" || value === "5" || value === "6" || value === "7" || value === "8" || value === "9" ;
         }
 
@@ -172,7 +177,7 @@
                             break;
                         case "/":
                             if (operand === 0) {
-                                alert("Erro! Divisão por zero realizada.")
+                                alert("Erro! Divisão por zero.")
                                 clearCalculatorInput()
                                 return ;
                             }
@@ -188,11 +193,7 @@
         }
 
         function doOutput() {
-            let sentence = "";
-            for (let i = 0; i < sentences.length; i++) {
-                sentence += sentences[i];
-            }
-            calculatorInput.value = sentence;
+            calculatorInput.value = sentences.join('');
         }
     </script>
 </body>
